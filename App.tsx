@@ -347,11 +347,14 @@ function AppContent() {
 
 function App() {
   return (
-    <LanguageProvider>
-      <BlobProvider>
-        <AppContent />
-      </BlobProvider>
-    </LanguageProvider>
+    <>
+      <LanguageProvider>
+        <BlobProvider>
+          <AppContent />
+        </BlobProvider>
+      </LanguageProvider>
+      <Analytics />
+    </>
   );
 }
 
