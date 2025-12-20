@@ -341,6 +341,7 @@ function AppContent() {
           <Footer />
         </div>
       </main>
+      <Analytics />
     </HashRouter>
   );
 }
