@@ -11,6 +11,8 @@ import { LanguageProvider } from './LanguageContext';
 import { BlobProvider, useBlob } from './BlobContext';
 import { Theme } from './types';
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
 // Component to handle scroll/touch navigation between pages
 const ScrollHandler = () => {
   const navigate = useNavigate();
@@ -340,6 +342,9 @@ function AppContent() {
           <AnimatedRoutes />
           <Footer />
         </div>
+
+        {/* Vercel Speed Insights */}
+        <SpeedInsights />
       </main>
     </HashRouter>
   );
