@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
 import { useBlob } from '../BlobContext';
+import { useUI } from '../UIContext';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const { t } = useLanguage();
   const { setHovered } = useBlob();
-  
+  const { isLightboxOpen } = useUI();
+
   // Initialize state based on window width to ensure correct initial animation
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -33,8 +35,12 @@ export const Navbar: React.FC = () => {
   return (
     <motion.nav
       // Slide up from bottom on mobile (y: 100), slide down from top on desktop (y: -100)
+      // When lightbox is open, reverse the animation to hide it
       initial={{ y: isMobile ? 100 : -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      animate={{
+        y: isLightboxOpen ? (isMobile ? 100 : -100) : 0,
+        opacity: isLightboxOpen ? 0 : 1
+      }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="fixed bottom-7 md:bottom-auto md:top-6 left-0 right-0 z-40 flex justify-center items-center pointer-events-none"
     >
@@ -48,11 +54,10 @@ export const Navbar: React.FC = () => {
                   to={item.path}
                   onMouseEnter={() => setHovered(true)}
                   onMouseLeave={() => setHovered(false)}
-                  className={`px-3 md:px-6 py-2 rounded-full text-base font-medium transition-all duration-300 block relative ${
-                    isActive 
-                      ? 'text-black dark:text-white bg-gray-200 dark:bg-white/10 shadow-sm' 
-                      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'
-                  }`}
+                  className={`px-3 md:px-6 py-2 rounded-full text-base font-medium transition-all duration-300 block relative ${isActive
+                    ? 'text-black dark:text-white bg-gray-200 dark:bg-white/10 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'
+                    }`}
                 >
                   {item.label}
                 </Link>
