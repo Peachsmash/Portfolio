@@ -5,6 +5,11 @@ import { useLanguage } from '../LanguageContext';
 import { useUI } from '../UIContext';
 import { SEO } from './SEO';
 
+const getWebpSrc = (src: string) => {
+  // Replace .png, .jpg, .jpeg with .webp (case insensitive)
+  return src.replace(/\.(png|jpe?g)/i, '.webp');
+};
+
 // Hardcoded images mapped by ID
 const projectImages: Record<number, string> = {
   1: "/Overload-dc4.png",
