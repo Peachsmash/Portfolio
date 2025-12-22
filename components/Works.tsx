@@ -5,7 +5,7 @@ import { useLanguage } from '../LanguageContext';
 import { useUI } from '../UIContext';
 import { SEO } from './SEO';
 // Hardcoded images mapped by ID
-const projectImages: Record<number, string> = {
+export const projectImages: Record<number, string> = {
   1: "/Overload-dc4.png",
   2: "/IMG_8036.JPEG",
   3: "/IMG_8011.JPEG",
@@ -16,7 +16,7 @@ const projectImages: Record<number, string> = {
 
 // Gallery images for the lightbox carousel
 // Only Project 1 has a carousel with multiple images
-const projectGalleries: Record<number, string[]> = {
+export const projectGalleries: Record<number, string[]> = {
   1: [
     "/Overload-dc4.png",
     "/Overload-dc6.png",
