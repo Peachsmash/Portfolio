@@ -11,6 +11,26 @@ import { LanguageProvider } from './LanguageContext';
 import { BlobProvider, useBlob } from './BlobContext';
 import { UIProvider } from './UIContext';
 import { Theme } from './types';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+ 
+export default function App() {
+  return (
+    <div>
+      {/* ... */}
+      <SpeedInsights />
+    </div>
+  );
+}
+ 
+export default function App() {
+  return (
+    <div>
+      {/* ... */}
+      <Analytics />
+    </div>
+  );
+}
 
 // Component to handle scroll/touch navigation between pages
 const ScrollHandler = () => {
