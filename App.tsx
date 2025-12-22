@@ -313,6 +313,26 @@ const Footer = () => {
 function AppContent() {
   const [theme, setTheme] = useState<Theme>('light');
 
+  
+  // Image Preloading Logic
+  useEffect(() => {
+    const preloadImages = async () => {
+      // Gather all image URLs from Works component
+      const imageUrls = [
+        ...Object.values(projectImages),
+        ...Object.values(projectGalleries).flat()
+      ];
+
+      // Preload them
+      imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+      });
+    };
+
+    preloadImages();
+  }, []);
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
