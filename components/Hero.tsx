@@ -11,7 +11,7 @@ export const Hero: React.FC = () => {
   const { setHovered } = useBlob();
 
   const greetingLetters = Array.from(t.hero.greeting);
-  
+
   const greetingContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -24,8 +24,8 @@ export const Hero: React.FC = () => {
   };
 
   const letterVariants: Variants = {
-    hidden: { 
-      y: 20, 
+    hidden: {
+      y: 20,
       opacity: 0,
       filter: "blur(10px)",
       rotate: 5
@@ -43,26 +43,26 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <motion.section 
+    <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
       className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden pt-20"
     >
-      <SEO 
-        title="Maciej - Web Designer" 
-        description={t.hero.p} 
+      <SEO
+        title="Maciej 'Saplu' Rogowski - Web Designer & Developer"
+        description={t.hero.p}
       />
       <div className="z-10 flex flex-col items-center w-full max-w-4xl">
-        <h1 
+        <h1
           className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-display tracking-tight leading-tight flex flex-col items-center w-full gap-2 md:gap-4 cursor-default"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
           {/* Animated Greeting */}
-          <motion.div 
-            className="flex flex-wrap justify-center" 
+          <motion.div
+            className="flex flex-wrap justify-center"
             variants={greetingContainerVariants}
             initial="hidden"
             animate="visible"
@@ -77,9 +77,9 @@ export const Hero: React.FC = () => {
               </motion.span>
             ))}
           </motion.div>
-          
+
           {/* Title Wrapper with Gradient - Reverted to single block */}
-          <motion.div 
+          <motion.div
             className="font-display bg-gradient-to-r from-pink-500 via-red-500 to-yellow-400 bg-clip-text text-transparent select-none py-2"
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -88,8 +88,8 @@ export const Hero: React.FC = () => {
             {t.hero.title}
           </motion.div>
         </h1>
-        
-        <motion.p 
+
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.5, duration: 0.8 }}
@@ -101,31 +101,31 @@ export const Hero: React.FC = () => {
         </motion.p>
 
         <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.8, duration: 0.8 }}
-            className="mt-12 flex flex-col items-center gap-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.8, duration: 0.8 }}
+          className="mt-12 flex flex-col items-center gap-8"
         >
-           <Link 
-             to="/about" 
-             className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 transition-all duration-300 underline underline-offset-8 decoration-1 decoration-gray-400 dark:decoration-gray-500 hover:decoration-black dark:hover:decoration-white hover:decoration-2"
-             onMouseEnter={() => setHovered(true)}
-             onMouseLeave={() => setHovered(false)}
-           >
-             {t.hero.cta}
-           </Link>
+          <Link
+            to="/about"
+            className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 transition-all duration-300 underline underline-offset-8 decoration-1 decoration-gray-400 dark:decoration-gray-500 hover:decoration-black dark:hover:decoration-white hover:decoration-2"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+          >
+            {t.hero.cta}
+          </Link>
 
-           <motion.div
-             animate={{ y: [0, 8, 0] }}
-             transition={{ 
-               duration: 2,
-               repeat: Infinity,
-               ease: "easeInOut"
-             }}
-             className="text-gray-400 dark:text-gray-600"
-           >
-             <ArrowDown size={24} />
-           </motion.div>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="text-gray-400 dark:text-gray-600"
+          >
+            <ArrowDown size={24} />
+          </motion.div>
         </motion.div>
       </div>
     </motion.section>
