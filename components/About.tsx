@@ -11,6 +11,9 @@ export const About: React.FC = () => {
   const [phoneCopied, setPhoneCopied] = useState(false);
   const [emailClicked, setEmailClicked] = useState(false);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+
   const handleCopyPhone = () => {
     navigator.clipboard.writeText("+48 515964117");
     setPhoneCopied(true);
@@ -28,7 +31,7 @@ export const About: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: isMobile ? 0.05 : 0.1, // Faster stagger on mobile
         delayChildren: 0.1
       }
     }
@@ -44,7 +47,7 @@ export const About: React.FC = () => {
       transition: {
         type: "tween",
         ease: "linear",
-        duration: 0.4
+        duration: isMobile ? 0.3 : 0.4 // Slightly faster duration on mobile
       }
     }
   };
@@ -95,7 +98,7 @@ export const About: React.FC = () => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.05 }}
-      transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+      transition={{ duration: isMobile ? 0.3 : 0.5, ease: [0.33, 1, 0.68, 1] }}
       className="min-h-screen flex items-center justify-center pt-20 pb-32 md:py-28 px-4"
     >
       <SEO
