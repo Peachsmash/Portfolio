@@ -6,21 +6,21 @@ import { useUI } from '../UIContext';
 import { SEO } from './SEO';
 // Hardcoded images mapped by ID
 const projectImages: Record<number, string> = {
-  1: "/Overload-dc4.png",
-  2: "/IMG_8036.JPEG",
-  3: "/IMG_8011.JPEG",
-  4: "/szybka-wymianka5.png", // Added leading slash for absolute path reliability
-  5: "/IMG_8021.JPEG",
-  6: "/IMG_8031.JPEG",
+  1: "/Overload-dc4.webp",
+  2: "/IMG_8036.webp",
+  3: "/IMG_8011.webp",
+  4: "/szybka-wymianka5.webp", // Added leading slash for absolute path reliability
+  5: "/IMG_8021.webp",
+  6: "/IMG_8031.webp",
 };
 
 // Gallery images for the lightbox carousel
 // Only Project 1 has a carousel with multiple images
 const projectGalleries: Record<number, string[]> = {
   1: [
-    "/Overload-dc4.png",
-    "/Overload-dc6.png",
-    "/Overload-dc5.png"
+    "/Overload-dc4.webp",
+    "/Overload-dc6.webp",
+    "/Overload-dc5.webp"
   ]
 };
 
