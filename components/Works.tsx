@@ -31,21 +31,10 @@ const getProjectGallery = (id: number): string[] => {
 // IDs of projects that are currently ongoing
 const ongoingIds = [2, 3, 6];
 
-const textContainerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
-    }
-  }
-};
-
 const textItemVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
+  visible: { 
+    opacity: 1, 
     y: 0,
     transition: { type: "spring", stiffness: 100, damping: 20 }
   }
@@ -53,9 +42,9 @@ const textItemVariants: Variants = {
 
 const viewButtonVariants: Variants = {
   rest: { opacity: 0, scale: 0.5, y: 20 },
-  hover: {
-    opacity: 1,
-    scale: 1,
+  hover: { 
+    opacity: 1, 
+    scale: 1, 
     y: 0,
     transition: { type: "spring", stiffness: 400, damping: 25 }
   }
@@ -94,17 +83,30 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
   const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  const textContainerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        staggerChildren: isMobile ? 0.05 : 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isOngoing || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
     const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-
-    x.set(xPct * 6);
+    
+    x.set(xPct * 6); 
     y.set(yPct * 6);
   };
 
@@ -120,7 +122,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
       whileHover={isOngoing ? "rest" : "hover"}
       onClick={onClick}
     >
-      <div
+      <div 
         ref={ref}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -129,21 +131,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
         <motion.img
           src={imageSrc}
           alt={project.title}
-          loading="lazy"
+          loading="eager" 
           variants={{
             rest: { scale: isOngoing ? 1.05 : 1 },
             hover: { scale: 1.05 }
           }}
-          style={{
-            x: isOngoing ? 0 : mouseX,
-            y: isOngoing ? 0 : mouseY
+          style={{ 
+            x: isOngoing ? 0 : mouseX, 
+            y: isOngoing ? 0 : mouseY 
           }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className={`absolute inset-0 w-full h-full will-change-transform ${project.id === 4 ? 'object-fill' :
+          className={`absolute inset-0 w-full h-full will-change-transform ${
+            project.id === 4 ? 'object-fill' : 
             project.id === 1 ? 'object-contain bg-gray-50' :
-              'object-cover object-center'
-            } ${isOngoing ? 'blur-[2px] grayscale brightness-[0.4] opacity-80' : ''
-            }`}
+            'object-cover object-center'
+          } ${
+            isOngoing ? 'blur-[2px] grayscale brightness-[0.4] opacity-80' : ''
+          }`}
         />
 
         {!isOngoing && (
@@ -153,43 +157,43 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
               variants={viewButtonVariants}
               className="absolute bottom-5 right-5 p-3 bg-white text-black rounded-full shadow-xl z-20 flex items-center justify-center"
             >
-              <ArrowUpRight size={20} />
+               <ArrowUpRight size={20} />
             </motion.div>
           </>
         )}
 
         {isOngoing && (
           <>
-            <div
+            <div 
               className="absolute inset-0 z-[1] opacity-70 pointer-events-none mix-blend-overlay"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
               }}
             />
             <div className="absolute inset-0 flex items-center justify-center z-10 p-4">
-              <motion.div
-                initial={{ opacity: 0.8 }}
-                animate={{
-                  opacity: [0.8, 1, 0.8],
-                  scale: [1, 1.03, 1]
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="px-4 py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg shadow-lg"
-              >
-                <span className="text-white/90 font-mono text-sm md:text-base uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-yellow-400/80 shadow-[0_0_8px_rgba(250,204,21,0.4)]" />
-                  {language === 'pl' ? 'W REALIZACJI' : 'ONGOING PROJECT'}
-                </span>
-              </motion.div>
+               <motion.div
+                 initial={{ opacity: 0.8 }}
+                 animate={{ 
+                   opacity: [0.8, 1, 0.8],
+                   scale: [1, 1.03, 1]
+                 }}
+                 transition={{ 
+                   duration: 2.5, 
+                   repeat: Infinity,
+                   ease: "easeInOut" 
+                 }}
+                 className="px-4 py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg shadow-lg"
+               >
+                 <span className="text-white/90 font-mono text-sm md:text-base uppercase tracking-widest flex items-center gap-2">
+                   <span className="w-2 h-2 rounded-full bg-yellow-400/80 shadow-[0_0_8px_rgba(250,204,21,0.4)]" />
+                   {language === 'pl' ? 'W REALIZACJI' : 'ONGOING PROJECT'}
+                 </span>
+               </motion.div>
             </div>
             <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
-              <p className="text-[10px] font-mono text-white/50 tracking-wider uppercase bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/5">
-                {language === 'pl' ? 'ZDJĘCIE POGLĄDOWE • PRACA W TOKU' : 'PLACEHOLDER PHOTO • WORK IN PROGRESS'}
-              </p>
+                <p className="text-[10px] font-mono text-white/50 tracking-wider uppercase bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/5">
+                  {language === 'pl' ? 'ZDJĘCIE POGLĄDOWE • PRACA W TOKU' : 'PLACEHOLDER PHOTO • WORK IN PROGRESS'}
+                </p>
             </div>
           </>
         )}
@@ -201,13 +205,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
         viewport={{ once: true, margin: "-10%" }}
         variants={textContainerVariants}
       >
-        <motion.h3
+        <motion.h3 
           variants={textItemVariants}
           className={`text-xl md:text-2xl font-bold font-display ${isOngoing ? 'text-gray-400 dark:text-gray-600' : ''}`}
         >
           {project.title}
         </motion.h3>
-        <motion.p
+        <motion.p 
           variants={textItemVariants}
           className={`text-sm md:text-base mt-1 font-mono ${isOngoing ? 'text-gray-400 dark:text-gray-600' : 'text-gray-500 dark:text-gray-400'}`}
         >
@@ -221,17 +225,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
 export const Works: React.FC = () => {
   const { t, language } = useLanguage();
   const { setLightboxOpen } = useUI();
+  
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Lightbox State: project ID, current image index, and animation direction
   const [lightboxState, setLightboxState] = useState<{ id: number; index: number; direction: number } | null>(null);
 
   const initialX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
-  const initialY = 60;
+  const initialY = 60; 
 
   const mouseX = useMotionValue(initialX);
   const mouseY = useMotionValue(initialY);
-
-  const springConfig = { damping: 30, stiffness: 500 };
+  
+  const springConfig = { damping: 30, stiffness: 500 }; 
   const xSpring = useSpring(mouseX, springConfig);
   const ySpring = useSpring(mouseY, springConfig);
 
@@ -253,7 +259,7 @@ export const Works: React.FC = () => {
     if (!lightboxState) return;
     const gallery = getProjectGallery(lightboxState.id);
     let newIndex = lightboxState.index + newDirection;
-
+    
     if (newIndex < 0) newIndex = gallery.length - 1;
     if (newIndex >= gallery.length) newIndex = 0;
 
@@ -268,7 +274,7 @@ export const Works: React.FC = () => {
       if (e.key === 'ArrowRight') paginate(1);
       if (e.key === 'ArrowLeft') paginate(-1);
     };
-
+    
     if (lightboxState) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
@@ -297,16 +303,16 @@ export const Works: React.FC = () => {
   const currentImageSrc = lightboxState ? currentGallery[lightboxState.index] : '';
 
   return (
-    <motion.section
+    <motion.section 
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+      transition={{ duration: isMobile ? 0.3 : 0.5, ease: [0.33, 1, 0.68, 1] }}
       className="min-h-screen py-24 md:py-32 px-4 md:px-8 max-w-7xl mx-auto"
     >
-      <SEO
-        title={`${t.works.title} | Maciej`}
-        description={t.works.p}
+      <SEO 
+        title={`${t.works.title} | Maciej`} 
+        description={t.works.p} 
       />
 
       {/* Lightbox / Full Screen Image Modal */}
@@ -320,12 +326,12 @@ export const Works: React.FC = () => {
             onClick={() => setLightboxState(null)}
           >
             {/* Image Container */}
-            <div
-              className="relative w-full h-full flex items-center justify-center overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+            <div 
+               className="relative w-full h-full flex items-center justify-center overflow-hidden"
+               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button - Moved inside container */}
-              <button
+              <button 
                 onClick={(e) => { e.stopPropagation(); setLightboxState(null); }}
                 className="absolute top-4 right-4 md:top-0 md:right-0 bg-black/40 hover:bg-black/60 text-white/80 hover:text-white rounded-full p-2 transition-all z-[60] backdrop-blur-sm border border-white/10"
                 aria-label="Close"
@@ -373,11 +379,11 @@ export const Works: React.FC = () => {
 
               {/* Counter Indicator */}
               {currentGallery.length > 1 && (
-                <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 z-[60]">
-                  <span className="text-white/90 font-mono text-sm">
-                    {lightboxState.index + 1} / {currentGallery.length}
-                  </span>
-                </div>
+                 <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 z-[60]">
+                   <span className="text-white/90 font-mono text-sm">
+                     {lightboxState.index + 1} / {currentGallery.length}
+                   </span>
+                 </div>
               )}
             </div>
           </motion.div>
@@ -395,7 +401,7 @@ export const Works: React.FC = () => {
         animate={{ opacity: lightboxState ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
-        <motion.div
+        <motion.div 
           className="w-[400px] h-[400px] rounded-full blur-[80px] bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 opacity-30 mix-blend-multiply dark:mix-blend-screen"
           animate={{ rotate: 360 }}
           transition={{ rotate: { duration: 25, ease: "linear", repeat: Infinity } }}
@@ -409,10 +415,10 @@ export const Works: React.FC = () => {
           {t.works.p}
         </p>
       </div>
-
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-24 md:pb-20 relative z-10">
         {t.works.projects.map((project) => (
-          <ProjectCard
+          <ProjectCard 
             key={project.id}
             project={project}
             imageSrc={projectImages[project.id]}
