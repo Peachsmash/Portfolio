@@ -11,7 +11,7 @@ export const projectImages: Record<number, string> = {
   3: "/web_design_portfolio_photo4.webp",
   4: "/szybka-wymianka5.png", // Added leading slash for absolute path reliability
   5: "/web_design_portfolio_photo3.webp",
-  6: "/web_design_portfolio_photo2.webp,
+  6: "/web_design_portfolio_photo2.webp",
 };
 
 // Gallery images for the lightbox carousel
