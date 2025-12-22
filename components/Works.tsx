@@ -7,8 +7,8 @@ import { SEO } from './SEO';
 // Hardcoded images mapped by ID
 export const projectImages: Record<number, string> = {
   1: "/Overload-dc4.png",
-  2: "/web_design_portfolio_photo1.webp",
-  3: "/web_design_portfolio_photo4.webp",
+  2: "/web_design_portfolio_photo4.webp",
+  3: "/web_design_portfolio_photo1.webp",
   4: "/szybka-wymianka5.png", // Added leading slash for absolute path reliability
   5: "/web_design_portfolio_photo3.webp",
   6: "/web_design_portfolio_photo2.webp",
