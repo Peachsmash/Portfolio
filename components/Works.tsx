@@ -1,10 +1,34 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, Variants, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, X, ExternalLink, Layers, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
 import { useUI } from '../UIContext';
 import { SEO } from './SEO';
-// Hardcoded images mapped by ID
+import { Project } from '../types';
+
+// Tech stack color mapping (matching About section styles)
+const techColors: Record<string, string> = {
+  'React': 'hover:border-[#61DAFB] dark:hover:border-[#61DAFB]',
+  'TypeScript': 'hover:border-[#3178C6] dark:hover:border-[#3178C6]',
+  'Tailwind CSS': 'hover:border-[#38BDF8] dark:hover:border-[#38BDF8]',
+  'Framer Motion': 'hover:border-[#D946EF] dark:hover:border-[#D946EF]',
+  'Node.js': 'hover:border-[#339933] dark:hover:border-[#339933]',
+  'Figma': 'hover:border-[#F24E1E] dark:hover:border-[#F24E1E]',
+  'Next.js': 'hover:border-black dark:hover:border-white',
+  'React Native': 'hover:border-[#61DAFB] dark:hover:border-[#61DAFB]',
+  'Redux': 'hover:border-[#764ABC] dark:hover:border-[#764ABC]',
+  'D3.js': 'hover:border-[#F9A03C] dark:hover:border-[#F9A03C]',
+  'Sanity.io': 'hover:border-[#F03E2F] dark:hover:border-[#F03E2F]',
+  'Web WebGL': 'hover:border-[#990000] dark:hover:border-[#ff0000]',
+  'Flutter': 'hover:border-[#02569B] dark:hover:border-[#02569B]',
+  'Firebase': 'hover:border-[#FFCA28] dark:hover:border-[#FFCA28]',
+  'Google Maps API': 'hover:border-[#4285F4] dark:hover:border-[#4285F4]',
+  'Gatsby': 'hover:border-[#663399] dark:hover:border-[#663399]',
+  'GraphQL': 'hover:border-[#E10098] dark:hover:border-[#E10098]',
+  'Netlify': 'hover:border-[#00C7B7] dark:hover:border-[#00C7B7]',
+};
+
+// Hardcoded images mapped by ID - Updated to high res for larger cards
 export const projectImages: Record<number, string> = {
   1: "/Overload-dc4.png",
   2: "/web_design_portfolio_photo4.webp",
@@ -22,10 +46,6 @@ export const projectGalleries: Record<number, string[]> = {
     "/Overload-dc6.png",
     "/Overload-dc5.png"
   ]
-};
-
-const getProjectGallery = (id: number): string[] => {
-  return projectGalleries[id] || [projectImages[id]];
 };
 
 // IDs of projects that are currently ongoing
@@ -50,29 +70,131 @@ const viewButtonVariants: Variants = {
   }
 };
 
-// Carousel Variants
-const slideVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 1000 : -1000,
-    opacity: 0,
-    scale: 0.95
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-    scale: 1
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 1000 : -1000,
-    opacity: 0,
-    scale: 0.95
-  })
+interface ImageViewerProps {
+  images: string[];
+  initialIndex: number;
+  onClose: () => void;
+}
+
+const ImageViewer: React.FC<ImageViewerProps> = ({ images, initialIndex, onClose }) => {
+  const [index, setIndex] = useState(initialIndex);
+  const [direction, setDirection] = useState(0);
+
+  const handleNext = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const handlePrev = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setDirection(-1);
+    setIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrev, onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] bg-black/95 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <button 
+        onClick={onClose}
+        className="absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+      >
+        <X size={24} />
+      </button>
+
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={handlePrev}
+            className="absolute left-4 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+          >
+            <ChevronLeft size={32} />
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+          >
+            <ChevronRight size={32} />
+          </button>
+        </>
+      )}
+
+      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-10" onClick={(e) => e.stopPropagation()}>
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.img
+            key={index}
+            src={images[index]}
+            custom={direction}
+            variants={{
+              enter: (direction: number) => ({
+                x: direction > 0 ? 1000 : -1000,
+                opacity: 0,
+                scale: 0.9
+              }),
+              center: {
+                zIndex: 1,
+                x: 0,
+                opacity: 1,
+                scale: 1
+              },
+              exit: (direction: number) => ({
+                zIndex: 0,
+                x: direction < 0 ? 1000 : -1000,
+                opacity: 0,
+                scale: 0.9
+              })
+            }}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = Math.abs(offset.x) * velocity.x;
+              if (swipe < -10000) handleNext();
+              else if (swipe > 10000) handlePrev();
+            }}
+            className="max-w-full max-h-full object-contain shadow-2xl rounded-sm"
+          />
+        </AnimatePresence>
+        
+        {images.length > 1 && (
+           <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-50 pointer-events-none">
+             {images.map((_, i) => (
+               <div 
+                 key={i}
+                 className={`w-2 h-2 rounded-full transition-all duration-300 ${i === index ? 'bg-white scale-125' : 'bg-white/30'}`}
+               />
+             ))}
+           </div>
+        )}
+      </div>
+    </motion.div>
+  );
 };
 
 interface ProjectCardProps {
-  project: { id: number; title: string; category: string };
+  project: Project;
   imageSrc: string;
   isOngoing: boolean;
   language: string;
@@ -141,11 +263,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, imageSrc, isOngoing,
             y: isOngoing ? 0 : mouseY 
           }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className={`absolute inset-0 w-full h-full will-change-transform ${
-            project.id === 4 ? 'object-fill' : 
-            project.id === 1 ? 'object-contain bg-gray-50' :
-            'object-cover object-center'
-          } ${
+          className={`absolute inset-0 w-full h-full will-change-transform object-cover object-center ${
             isOngoing ? 'blur-[2px] grayscale brightness-[0.4] opacity-80' : ''
           }`}
         />
@@ -228,8 +346,12 @@ export const Works: React.FC = () => {
   
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-  // Lightbox State: project ID, current image index, and animation direction
-  const [lightboxState, setLightboxState] = useState<{ id: number; index: number; direction: number } | null>(null);
+  // Modal State
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  
+  // Gallery State
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   const initialX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
   const initialY = 60; 
@@ -254,28 +376,18 @@ export const Works: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Handle navigation
-  const paginate = useCallback((newDirection: number) => {
-    if (!lightboxState) return;
-    const gallery = getProjectGallery(lightboxState.id);
-    let newIndex = lightboxState.index + newDirection;
-    
-    if (newIndex < 0) newIndex = gallery.length - 1;
-    if (newIndex >= gallery.length) newIndex = 0;
-
-    setLightboxState({ ...lightboxState, index: newIndex, direction: newDirection });
-  }, [lightboxState]);
-
-  // Handle keyboard events
+  // Handle keyboard events (ESC to close modal)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!lightboxState) return;
-      if (e.key === 'Escape') setLightboxState(null);
-      if (e.key === 'ArrowRight') paginate(1);
-      if (e.key === 'ArrowLeft') paginate(-1);
+      // Close gallery first if open
+      if (e.key === 'Escape') {
+         if (isGalleryOpen) setIsGalleryOpen(false);
+         else if (selectedProject) setSelectedProject(null);
+      }
     };
     
-    if (lightboxState) {
+    // Manage body lock and context
+    if (selectedProject) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       document.body.classList.add('lightbox-open');
@@ -296,11 +408,18 @@ export const Works: React.FC = () => {
       setLightboxOpen(false);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [lightboxState, setLightboxOpen, paginate]);
+  }, [selectedProject, setLightboxOpen, isGalleryOpen]);
 
-  // Current active data
-  const currentGallery = lightboxState ? getProjectGallery(lightboxState.id) : [];
-  const currentImageSrc = lightboxState ? currentGallery[lightboxState.index] : '';
+  const handleOpenGallery = () => {
+    if (!selectedProject) return;
+    setIsGalleryOpen(true);
+    setGalleryIndex(0);
+  };
+
+  // Prepare images for gallery
+  const currentGalleryImages = selectedProject 
+    ? (projectGalleries[selectedProject.id] || [projectImages[selectedProject.id]])
+    : [];
 
   return (
     <motion.section 
@@ -315,78 +434,135 @@ export const Works: React.FC = () => {
         description={t.works.p} 
       />
 
-      {/* Lightbox / Full Screen Image Modal */}
+      {/* Project Details Modal */}
       <AnimatePresence>
-        {lightboxState && (
+        {selectedProject && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-0 md:p-8"
-            onClick={() => setLightboxState(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+            onClick={() => setSelectedProject(null)}
           >
-            {/* Image Container */}
-            <div 
-               className="relative w-full h-full flex items-center justify-center overflow-hidden"
-               onClick={(e) => e.stopPropagation()}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-gray-900 w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-3xl shadow-2xl relative flex flex-col scrollbar-hide"
             >
-              {/* Close Button - Moved inside container */}
+              {/* Close Button */}
               <button 
-                onClick={(e) => { e.stopPropagation(); setLightboxState(null); }}
-                className="absolute top-4 right-4 md:top-0 md:right-0 bg-black/40 hover:bg-black/60 text-white/80 hover:text-white rounded-full p-2 transition-all z-[60] backdrop-blur-sm border border-white/10"
-                aria-label="Close"
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-20 bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20 text-black dark:text-white rounded-full p-2 transition-all backdrop-blur-sm"
               >
                 <X size={24} />
               </button>
 
-              {/* Navigation Buttons (Only if multiple images) - Moved inside container */}
-              {currentGallery.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); paginate(-1); }}
-                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/50 text-white/70 hover:text-white rounded-full p-3 transition-all z-[60] backdrop-blur-sm border border-white/5 hover:border-white/20"
-                    aria-label="Previous Image"
-                  >
-                    <ChevronLeft size={32} />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); paginate(1); }}
-                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/50 text-white/70 hover:text-white rounded-full p-3 transition-all z-[60] backdrop-blur-sm border border-white/5 hover:border-white/20"
-                    aria-label="Next Image"
-                  >
-                    <ChevronRight size={32} />
-                  </button>
-                </>
-              )}
-
-              <AnimatePresence initial={false} custom={lightboxState.direction} mode="popLayout">
-                <motion.img
-                  key={currentImageSrc}
-                  src={currentImageSrc}
-                  custom={lightboxState.direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  alt="Project View"
-                  className="max-w-full max-h-[85vh] md:max-h-[90vh] object-contain shadow-2xl absolute"
+              {/* Header Image (Clickable for Gallery) */}
+              <div 
+                className="relative w-full aspect-video md:aspect-[21/9] bg-gray-100 dark:bg-gray-800 flex-shrink-0 group cursor-zoom-in overflow-hidden"
+                onClick={handleOpenGallery}
+              >
+                <img 
+                  src={projectImages[selectedProject.id]} 
+                  alt={selectedProject.title}
+                  className="w-full h-full object-cover"
                 />
-              </AnimatePresence>
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 transition-opacity group-hover:opacity-70" />
+                
+                {/* Maximize Icon Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="bg-black/40 backdrop-blur-sm p-4 rounded-full text-white">
+                     <Maximize2 size={32} />
+                  </div>
+                </div>
 
-              {/* Counter Indicator */}
-              {currentGallery.length > 1 && (
-                 <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10 z-[60]">
-                   <span className="text-white/90 font-mono text-sm">
-                     {lightboxState.index + 1} / {currentGallery.length}
-                   </span>
-                 </div>
-              )}
-            </div>
+                <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 text-white pointer-events-none">
+                  <motion.p 
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ delay: 0.2 }}
+                     className="text-sm font-mono tracking-wider uppercase opacity-90 mb-2"
+                  >
+                    {selectedProject.category}
+                  </motion.p>
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-3xl md:text-6xl font-bold font-display"
+                  >
+                    {selectedProject.title}
+                  </motion.h2>
+                </div>
+              </div>
+
+              {/* Content Body */}
+              <div className="p-6 md:p-12 flex flex-col md:flex-row gap-8 md:gap-16">
+                <div className="flex-1 space-y-8">
+                  {/* Description */}
+                  <div>
+                    <h3 className="text-xl font-bold font-display mb-4 flex items-center gap-2">
+                       {t.works.aboutProject}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-base md:text-lg">
+                      {selectedProject.description}
+                    </p>
+                  </div>
+
+                   {/* Tech Stack */}
+                  {selectedProject.stack && (
+                    <div>
+                      <h3 className="text-sm font-bold font-mono uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+                        <Layers size={16} />
+                        {t.works.technologies}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProject.stack.map((tech) => (
+                          <span 
+                            key={tech} 
+                            className={`px-3 py-1.5 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full text-sm font-medium font-mono text-gray-700 dark:text-gray-300 transition-colors duration-300 cursor-default ${techColors[tech] || 'hover:border-gray-400 dark:hover:border-gray-500'}`}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Sidebar / Actions */}
+                <div className="md:w-72 flex-shrink-0 flex flex-col gap-4">
+                  {selectedProject.links?.demo && (
+                    <a 
+                      href={selectedProject.links.demo} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-medium transition-colors shadow-lg shadow-blue-500/20 text-lg group"
+                    >
+                      <span>{t.works.visitSite}</span>
+                      <ExternalLink size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Full Screen Gallery Overlay */}
+      <AnimatePresence>
+        {isGalleryOpen && (
+          <ImageViewer 
+            images={currentGalleryImages} 
+            initialIndex={galleryIndex} 
+            onClose={() => setIsGalleryOpen(false)} 
+          />
         )}
       </AnimatePresence>
 
@@ -398,7 +574,7 @@ export const Works: React.FC = () => {
           y: blobY,
           zIndex: -1 // Behind content
         }}
-        animate={{ opacity: lightboxState ? 0 : 1 }}
+        animate={{ opacity: selectedProject ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
         <motion.div 
@@ -416,6 +592,7 @@ export const Works: React.FC = () => {
         </p>
       </div>
       
+      {/* Reverted to 2-Column Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pb-24 md:pb-20 relative z-10">
         {t.works.projects.map((project) => (
           <ProjectCard 
@@ -426,7 +603,7 @@ export const Works: React.FC = () => {
             language={language}
             onClick={() => {
               if (!ongoingIds.includes(project.id)) {
-                setLightboxState({ id: project.id, index: 0, direction: 0 });
+                setSelectedProject(project);
               }
             }}
           />
