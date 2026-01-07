@@ -1,11 +1,11 @@
 // Hardcoded images mapped by ID - Updated to high res for larger cards
 export const projectImages: Record<number, string> = {
     1: "/Overload-dc4.png",
-    2: "/web_design_portfolio_photo4.JPEG",
-    3: "/web_design_portfolio_photo1.JPEG",
+    2: "/web_design_portfolio_photo4.webo",
+    3: "/web_design_portfolio_photo1.webp",
     4: "/szybka-wymianka5.png", // Added leading slash for absolute path reliability
-    5: "/web_design_portfolio_photo2.JPEG",
-    6: "/web_design_portfolio_photo3.JPEG",
+    5: "/web_design_portfolio_photo2.webp",
+    6: "/web_design_portfolio_photo3.webp",
 };
 
 // Gallery images for the lightbox carousel
@@ -18,4 +18,5 @@ export const projectGalleries: Record<number, string[]> = {
     ]
 };
 // IDs of projects that are currently ongoing and should be displayed as such in the Works section
+
 export const ongoingIds = [2, 3, 6];
