@@ -182,7 +182,7 @@ export const About: React.FC = () => {
 
               <div className="relative z-10 flex flex-col items-center justify-center flex-1 px-4 min-w-0">
                 <span className="text-xs md:text-sm font-bold font-mono text-gray-600 dark:text-gray-400 uppercase tracking-widest mb-1">{t.about.phoneLabel}</span>
-                <span className="text-base md:text-xl font-semibold font-mono text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 underline decoration-transparent group-hover:decoration-emerald-500/40 underline-offset-4 transition-colors duration-300 break-words text-center">(+48) 515 964 11*</span>
+                <span className="text-base md:text-xl font-semibold font-mono text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 underline decoration-transparent group-hover:decoration-emerald-500/40 underline-offset-4 transition-colors duration-300 break-words text-center">(+48) 515 964 117</span>
                 <span className="text-xs md:text-sm font-medium font-mono text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">
                   {phoneCopied ? t.about.copied : t.about.clickToCopy}
                 </span>
