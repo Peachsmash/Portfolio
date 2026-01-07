@@ -3,15 +3,18 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface UIContextType {
   isLightboxOpen: boolean;
   setLightboxOpen: (open: boolean) => void;
+  navHoverIndex: number | null;
+  setNavHoverIndex: (index: number | null) => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export const UIProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLightboxOpen, setLightboxOpen] = useState(false);
-  
+  const [navHoverIndex, setNavHoverIndex] = useState<number | null>(null);
+
   return (
-    <UIContext.Provider value={{ isLightboxOpen, setLightboxOpen }}>
+    <UIContext.Provider value={{ isLightboxOpen, setLightboxOpen, navHoverIndex, setNavHoverIndex }}>
       {children}
     </UIContext.Provider>
   );
