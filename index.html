@@ -1,9 +1,38 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Maciej Saplu Rogowski</title>
+    <title>Maciej 'Saplu' Rogowski - Web Designer & Developer</title>
+    
+    <!-- Theme Script to prevent flash -->
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let theme = 'light';
+        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+          theme = 'dark';
+        }
+
+        let themeColor = '#ffffff';
+
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          themeColor = '#0f172a';
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        
+        // Set initial theme-color for mobile browsers
+        var meta = document.createElement('meta');
+        meta.name = "theme-color";
+        meta.content = themeColor;
+        document.head.appendChild(meta);
+      })();
+    </script>
+    
     <!-- Standard Favicon (Base64 Encoded to prevent build errors) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2N2U4Zjk7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2MGE1ZmE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojYTg1NWY3O3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPg==" />
     
@@ -12,12 +41,12 @@
 
     <!-- Safari Pinned Tab Icon (Base64 Encoded) -->
     <link rel="mask-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iYmxhY2siIC8+PC9zdmc+" color="#60a5fa" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  </head>
+
+    <link rel="stylesheet" href="index.css" />
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
   <body>
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+        <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
