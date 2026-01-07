@@ -17,6 +17,7 @@ export const projectGalleries: Record<number, string[]> = {
         "/Overload-dc5.png"
     ],
         5: [
+        "/web_design_portfolio_photo2.webp",
         "/web_design_portfolio_photo4.webp",
         "/web_design_portfolio_photo3.webp",
         "/web_design_portfolio_photo1.webp"
@@ -25,5 +26,6 @@ export const projectGalleries: Record<number, string[]> = {
 // IDs of projects that are currently ongoing and should be displayed as such in the Works section
 
 export const ongoingIds = [2, 3, 6];
+
 
 
