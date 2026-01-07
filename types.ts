@@ -6,9 +6,16 @@ export interface NavItem {
   href: string;
 }
 
+export interface ProjectLinks {
+  demo?: string;
+}
+
 export interface Project {
   id: number;
   title: string;
   category: string;
-  imageUrl: string;
+  imageUrl?: string;
+  description?: string;
+  stack?: string[];
+  links?: ProjectLinks;
 }
